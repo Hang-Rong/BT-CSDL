@@ -1,0 +1,21 @@
+create database School;
+use School;
+create table Student (
+    studentId int auto_increment primary key ,
+    fullName varchar(50) not null,
+    birthday date not null,
+    address varchar(256) not null,
+    phone char(10)
+);
+
+create table Class (
+    classId int auto_increment primary key ,
+    className char(10) not null
+);
+
+create table Teacher (
+    teacherId int auto_increment primary key ,
+    teacherName varchar(50) not null,
+    birthday date not null,
+    country char(20) not null
+);
