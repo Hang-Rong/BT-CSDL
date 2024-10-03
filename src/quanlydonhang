@@ -1,0 +1,95 @@
+create database quanLyBanHang;
+use quanLyBanHang;
+
+create table Customer (
+    cID int auto_increment primary key,
+    name varchar(100)not null,
+    age int not null
+);
+create table `Order` (
+    oID int auto_increment primary key,
+    cID int,
+    oDate date,
+    oTotalPrice decimal(10,2),
+    foreign key (cID) references Customer(cID)
+);
+create table Product (
+    pID int auto_increment primary key ,
+    pName varchar(100),
+    pPrice decimal(10,2)
+);
+create table OrderDetail (
+    oId int,
+    pId int,
+    odQTY int,
+    primary key (oID, pID),
+    foreign key (oID) references `Order`(oID),
+    foreign key (pID) references Product(pID)
+);
+
+insert into Customer (name, age) value
+    ('Nguyen Van A', 30),
+    ('Nguyen Van B', 25),
+    ('Tran Thi C', 18);
+
+insert into Product (pName, pPrice) value
+    ('Laptop Dell', 15000.00),
+    ('iPhone 13', 25000.00),
+    ('Samsung Galaxy S21', 18000.00),
+    ('MacBook Pro', 35000.00);
+
+insert into `Order` (cID, oDate, oTotalPrice) value
+    ( 1, '2024-09-29', 40000.00),
+    ( 2, '2024-09-30', 25000.00);
+select * from `Order`;
+insert into OrderDetail (oId, pId, odQTY) value
+    (1, 1, 1),
+    (1, 4, 2),
+    (2, 2, 1);
+select * from   OrderDetail;
+select * from `Order`;
+insert into Customer (name, age) value
+    ('Minh Quan', 10),
+    ('Ngoc Oanh', 20),
+    ('Hong Ha', 50);
+insert into `Order` (cID, oDate, oTotalPrice) value
+    (4, '2006-03-21', null),
+    (5,'2006-03-23',null),
+    (4,'2006-03-16', null);
+
+insert into Product (pName, pPrice) value
+    ('May Giat', 3000.00),
+    ('Tu Lanh', 5000.00),
+    ('Dieu Hoa', 7000.00),
+    ('Quat', 1000.00),
+    ('Bep Dien',2000.00);
+select * from Product;
+
+insert into OrderDetail (oId, pId, odQTY) value
+    (3,5, 3),
+    (3,7,7),
+    (3,8,2),
+    (4,5,1),
+    (5,5,8),
+    (4,9,4),
+    (4,7,3);
+
+select * from `Order`;
+
+select Customer.name as CustomerName, Product.pName as ProductName, OrderDetail.odQTY as Quantity
+from Customer
+         join `Order` on Customer.cID = `Order`.cID
+         join OrderDetail on `Order`.oID = OrderDetail.oID
+         join Product on OrderDetail.pID = Product.pID;
+
+select Customer.name as CustomerName
+from Customer
+         left join `Order` on Customer.cID = `Order`.cID
+where `Order`.oID is null;
+
+select `Order`.oID as OrderID, `Order`.oDate as OrderDate,
+       SUM(OrderDetail.odQTY * Product.pPrice) as TotalPrice
+from `Order`
+         join OrderDetail on `Order`.oID = OrderDetail.oID
+         join Product on OrderDetail.pID = Product.pID
+group by `Order`.oID, `Order`.oDate;
